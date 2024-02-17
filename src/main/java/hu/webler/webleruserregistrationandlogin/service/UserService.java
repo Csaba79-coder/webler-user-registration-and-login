@@ -61,8 +61,8 @@ public class UserService {
     public UserModel findUserByEmail(String email) {
         // van vagy nincs?
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
-        // ha nincs, akkor kezeljük a "hibát"
+        // ha nincs, akkor kezeljük a "hibát" -> vagy null-t adunk vissza! (ez utóbbi jobb, mert szükség esetén kezeljük a null-t később, a helyén
         // ha van akkor megyünk tovább a logikával
-        return Mapper.mapUserEntityToUserModel(Objects.requireNonNull(optionalUser.orElse(null)));
+        return optionalUser.map(Mapper::mapUserEntityToUserModel).orElse(null);
     }
 }
