@@ -2,8 +2,8 @@ package hu.webler.webleruserregistrationandlogin.controller;
 
 import hu.webler.webleruserregistrationandlogin.model.UserRegistrationModel;
 import hu.webler.webleruserregistrationandlogin.model.UserModel;
+import hu.webler.webleruserregistrationandlogin.model.UserUpdateModel;
 import hu.webler.webleruserregistrationandlogin.service.UserService;
-import hu.webler.webleruserregistrationandlogin.util.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +35,16 @@ public class UserController {
     @GetMapping("/users/{id}")
     public ResponseEntity<UserModel> renderUserById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.status(200).body(userService.findUserById(id));
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return ResponseEntity.status(204).build();
+    }
+
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<UserModel> updateExistingUser(@PathVariable Long id, @RequestBody UserUpdateModel userUpdateModel) {
+        return ResponseEntity.status(200).body(userService.partialUpdateExistingUser(id, userUpdateModel));
     }
 }

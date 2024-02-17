@@ -2,9 +2,9 @@ package hu.webler.webleruserregistrationandlogin.service;
 
 import hu.webler.webleruserregistrationandlogin.controller.exception.UserAlreadyExistsException;
 import hu.webler.webleruserregistrationandlogin.entity.User;
-import hu.webler.webleruserregistrationandlogin.model.UserLoginModel;
 import hu.webler.webleruserregistrationandlogin.model.UserRegistrationModel;
 import hu.webler.webleruserregistrationandlogin.model.UserModel;
+import hu.webler.webleruserregistrationandlogin.model.UserUpdateModel;
 import hu.webler.webleruserregistrationandlogin.persistence.UserRepository;
 import hu.webler.webleruserregistrationandlogin.util.Mapper;
 import lombok.RequiredArgsConstructor;
@@ -71,11 +71,36 @@ public class UserService {
     }
 
     public UserModel findUserById(Long id) {
-        return Mapper.mapUserEntityToUserModel(userRepository.findUserById(id).orElseThrow(() -> {
+        return Mapper.mapUserEntityToUserModel(userRepository.findUserById(id)
+                .orElseThrow(() -> {
             String message = String.format("User not exists with id: %s", id);
             log.info(message);
             return new NoSuchElementException(message);
         }));
+    }
+
+    public void deleteUserById(Long id) {
+        Optional<User> deletedUser = userRepository.findUserById(id);
+        if (deletedUser.isEmpty()) {
+            String message = String.format("User not exists with id: %s, cannot delete!", id);
+            log.info(message);
+            throw new NoSuchElementException(message);
+        } else {
+            userRepository.delete(deletedUser.get());
+        }
+    }
+
+
+    public UserModel partialUpdateExistingUser(Long id, UserUpdateModel userUpdateModel) {
+        User existingUser = userRepository.findUserById(id)
+                .orElseThrow(() -> {
+                    String message = String.format("User not exists with id: %s, cannot update", id);
+                    log.info(message);
+                    return new NoSuchElementException(message);
+                });
+        existingUser.setUsername(userUpdateModel.getUsername());
+        existingUser.setPassword(userUpdateModel.getPassword());
+        return Mapper.mapUserEntityToUserModel(userRepository.save(existingUser));
     }
 
     private UserModel findUserByEmail(String email) {
