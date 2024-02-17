@@ -16,6 +16,7 @@ public class User {
     private Long id;
 
     @NonNull
+    @Column(unique = true)
     private String email;
 
     @NonNull

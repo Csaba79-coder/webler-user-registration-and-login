@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.InputMismatchException;
 import java.util.Map;
 
-import static hu.webler.webleruserregistrationandlogin.value.ErrorCode.ERROR_CODE_001;
-import static hu.webler.webleruserregistrationandlogin.value.ErrorCode.ERROR_CODE_002;
+import static hu.webler.webleruserregistrationandlogin.value.ErrorCode.*;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -23,6 +22,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(value = {IllegalArgumentException.class})
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
         return new ResponseEntity<>(responseBodyWithMessage(ERROR_CODE_002, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {UserAlreadyExistsException.class})
+    public ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        return new ResponseEntity<>(responseBodyWithMessage(ERROR_CODE_003, ex.getMessage()), HttpStatus.FOUND);
     }
 
     private String responseBodyWithMessage(ErrorCode code, String message) {
