@@ -31,4 +31,9 @@ public class UserController {
     public ResponseEntity<UserModel> login(@RequestParam String email, @RequestParam String password) {
         return ResponseEntity.status(200).body(userService.loginUser(email, password));
     }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserModel> renderUserById(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.status(200).body(userService.findUserById(id));
+    }
 }

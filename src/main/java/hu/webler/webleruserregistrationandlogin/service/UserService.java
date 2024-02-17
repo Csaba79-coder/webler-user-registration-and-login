@@ -57,14 +57,25 @@ public class UserService {
     }
 
     public UserModel loginUser(String email, String password) {
-        UserModel existingUser = findUserByEmail(email);
-        if (existingUser == null) {
+        Optional<User> existingUser = userRepository.findUserByEmail(email);
+        if (existingUser.isEmpty()) {
             String message = String.format("User not exists with email: %s", email);
             log.info(message);
             throw new NoSuchElementException(message);
         } else {
+            if (existingUser.get().getPassword().equals(password)) {
+                return Mapper.mapUserEntityToUserModel(existingUser.get());
+            }
             return null;
         }
+    }
+
+    public UserModel findUserById(Long id) {
+        return Mapper.mapUserEntityToUserModel(userRepository.findUserById(id).orElseThrow(() -> {
+            String message = String.format("User not exists with id: %s", id);
+            log.info(message);
+            return new NoSuchElementException(message);
+        }));
     }
 
     private UserModel findUserByEmail(String email) {
