@@ -1,10 +1,7 @@
 package hu.webler.webleruserregistrationandlogin.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
@@ -18,9 +15,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     private String email;
 
+    @NonNull
     private String username;
 
+    @NonNull
     private String password;
 }
