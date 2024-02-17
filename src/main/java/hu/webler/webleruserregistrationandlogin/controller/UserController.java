@@ -1,12 +1,11 @@
 package hu.webler.webleruserregistrationandlogin.controller;
 
+import hu.webler.webleruserregistrationandlogin.model.UserCreateModel;
 import hu.webler.webleruserregistrationandlogin.model.UserModel;
 import hu.webler.webleruserregistrationandlogin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +19,10 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<List<UserModel>> renderAllUsers() {
         return ResponseEntity.status(200).body(userService.findAllUsers());
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<UserModel> createNewUser(@RequestBody UserCreateModel userCreateModel) {
+        return ResponseEntity.status(201).body(userService.createUser(userCreateModel));
     }
 }

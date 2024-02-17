@@ -1,5 +1,6 @@
 package hu.webler.webleruserregistrationandlogin.service;
 
+import hu.webler.webleruserregistrationandlogin.model.UserCreateModel;
 import hu.webler.webleruserregistrationandlogin.model.UserModel;
 import hu.webler.webleruserregistrationandlogin.persistence.UserRepository;
 import hu.webler.webleruserregistrationandlogin.util.Mapper;
@@ -20,5 +21,9 @@ public class UserService {
                 .stream()
                 .map(Mapper::mapUserEntityToUserModel)
                 .collect(Collectors.toList());
+    }
+
+    public UserModel createUser(UserCreateModel userCreateModel) {
+        return Mapper.mapUserEntityToUserModel(userRepository.save(Mapper.mapUserCreateModelToUserEntity(userCreateModel)));
     }
 }
