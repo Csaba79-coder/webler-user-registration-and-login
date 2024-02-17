@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,23 +31,22 @@ public class UserService {
     }
 
     public UserModel createUser(UserCreateModel userCreateModel) {
-        User currentUser = findUserByEmail(userCreateModel.getEmail());
-        if (currentUser != null) {
+        UserModel foundUser = findUserByEmail(userCreateModel.getEmail());
+        if (foundUser != null) {
             String message = String.format("User already exists with email: %s", userCreateModel.getEmail());
             log.info(message);
             throw new UserAlreadyExistsException(message);
         } else {
             if (userCreateModel.getEmail().isBlank() || userCreateModel.getEmail().isEmpty() ||
                     userCreateModel.getPassword().isBlank() || userCreateModel.getPassword().isEmpty()) {
-                // TODO error handling!
-                return null;
+                String message = "Invalid input!";
+                log.info(message);
+                throw new InputMismatchException(message);
             } else if (userCreateModel.getUsername().isBlank() || userCreateModel.getUsername().isEmpty()) {
                 String message = "Invalid input!";
                 log.info(message);
                 throw new IllegalArgumentException(message);
             } else {
-                // TODO legyen az email unique?
-                // TODO megvizsgálni, hogy a két jelszó megegyezik-e?
                 if (!userCreateModel.getPassword().equals(userCreateModel.getRepeatPassword())) {
                     String message = "Invalid input!";
                     log.info(message);
@@ -58,11 +58,11 @@ public class UserService {
         }
     }
 
-    public User findUserByEmail(String email) {
+    public UserModel findUserByEmail(String email) {
         // van vagy nincs?
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
         // ha nincs, akkor kezeljük a "hibát"
         // ha van akkor megyünk tovább a logikával
-        return optionalUser.orElse(null);
+        return Mapper.mapUserEntityToUserModel(Objects.requireNonNull(optionalUser.orElse(null)));
     }
 }
