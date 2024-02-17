@@ -2,6 +2,7 @@ package hu.webler.webleruserregistrationandlogin.service;
 
 import hu.webler.webleruserregistrationandlogin.controller.exception.UserAlreadyExistsException;
 import hu.webler.webleruserregistrationandlogin.entity.User;
+import hu.webler.webleruserregistrationandlogin.model.UserLoginModel;
 import hu.webler.webleruserregistrationandlogin.model.UserRegistrationModel;
 import hu.webler.webleruserregistrationandlogin.model.UserModel;
 import hu.webler.webleruserregistrationandlogin.persistence.UserRepository;
@@ -10,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,7 +56,18 @@ public class UserService {
         }
     }
 
-    public UserModel findUserByEmail(String email) {
+    public UserModel loginUser(String email, String password) {
+        UserModel existingUser = findUserByEmail(email);
+        if (existingUser == null) {
+            String message = String.format("User not exists with email: %s", email);
+            log.info(message);
+            throw new NoSuchElementException(message);
+        } else {
+            return null;
+        }
+    }
+
+    private UserModel findUserByEmail(String email) {
         // van vagy nincs?
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
         // ha nincs, akkor kezeljük a "hibát" -> vagy null-t adunk vissza! (ez utóbbi jobb, mert szükség esetén kezeljük a null-t később, a helyén
