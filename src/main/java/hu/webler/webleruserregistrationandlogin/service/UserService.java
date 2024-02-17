@@ -2,7 +2,7 @@ package hu.webler.webleruserregistrationandlogin.service;
 
 import hu.webler.webleruserregistrationandlogin.controller.exception.UserAlreadyExistsException;
 import hu.webler.webleruserregistrationandlogin.entity.User;
-import hu.webler.webleruserregistrationandlogin.model.UserCreateModel;
+import hu.webler.webleruserregistrationandlogin.model.UserRegistrationModel;
 import hu.webler.webleruserregistrationandlogin.model.UserModel;
 import hu.webler.webleruserregistrationandlogin.persistence.UserRepository;
 import hu.webler.webleruserregistrationandlogin.util.Mapper;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,29 +29,29 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserModel createUser(UserCreateModel userCreateModel) {
-        UserModel foundUser = findUserByEmail(userCreateModel.getEmail());
+    public UserModel createUser(UserRegistrationModel userRegistrationModel) {
+        UserModel foundUser = findUserByEmail(userRegistrationModel.getEmail());
         if (foundUser != null) {
-            String message = String.format("User already exists with email: %s", userCreateModel.getEmail());
+            String message = String.format("User already exists with email: %s", userRegistrationModel.getEmail());
             log.info(message);
             throw new UserAlreadyExistsException(message);
         } else {
-            if (userCreateModel.getEmail().isBlank() || userCreateModel.getEmail().isEmpty() ||
-                    userCreateModel.getPassword().isBlank() || userCreateModel.getPassword().isEmpty()) {
+            if (userRegistrationModel.getEmail().isBlank() || userRegistrationModel.getEmail().isEmpty() ||
+                    userRegistrationModel.getPassword().isBlank() || userRegistrationModel.getPassword().isEmpty()) {
                 String message = "Invalid input!";
                 log.info(message);
                 throw new InputMismatchException(message);
-            } else if (userCreateModel.getUsername().isBlank() || userCreateModel.getUsername().isEmpty()) {
+            } else if (userRegistrationModel.getUsername().isBlank() || userRegistrationModel.getUsername().isEmpty()) {
                 String message = "Invalid input!";
                 log.info(message);
                 throw new IllegalArgumentException(message);
             } else {
-                if (!userCreateModel.getPassword().equals(userCreateModel.getRepeatPassword())) {
+                if (!userRegistrationModel.getPassword().equals(userRegistrationModel.getRepeatPassword())) {
                     String message = "Invalid input!";
                     log.info(message);
                     throw new InputMismatchException(message);
                 } else {
-                    return Mapper.mapUserEntityToUserModel(userRepository.save(Mapper.mapUserCreateModelToUserEntity(userCreateModel)));
+                    return Mapper.mapUserEntityToUserModel(userRepository.save(Mapper.mapUserCreateModelToUserEntity(userRegistrationModel)));
                 }
             }
         }

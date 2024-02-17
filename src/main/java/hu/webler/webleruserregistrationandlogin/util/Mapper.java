@@ -1,7 +1,7 @@
 package hu.webler.webleruserregistrationandlogin.util;
 
 import hu.webler.webleruserregistrationandlogin.entity.User;
-import hu.webler.webleruserregistrationandlogin.model.UserCreateModel;
+import hu.webler.webleruserregistrationandlogin.model.UserRegistrationModel;
 import hu.webler.webleruserregistrationandlogin.model.UserModel;
 
 public class Mapper {
@@ -14,7 +14,7 @@ public class Mapper {
         return model;
     }
 
-    public static User mapUserCreateModelToUserEntity(UserCreateModel model) {
+    public static User mapUserCreateModelToUserEntity(UserRegistrationModel model) {
         User entity = new User();
         entity.setEmail(model.getEmail());
         entity.setUsername(model.getUsername());

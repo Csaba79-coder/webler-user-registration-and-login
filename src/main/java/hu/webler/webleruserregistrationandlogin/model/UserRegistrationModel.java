@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCreateModel {
+public class UserRegistrationModel {
 
     private String email;
     private String username;

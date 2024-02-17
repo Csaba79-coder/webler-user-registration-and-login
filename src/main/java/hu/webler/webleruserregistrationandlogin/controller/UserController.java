@@ -1,6 +1,6 @@
 package hu.webler.webleruserregistrationandlogin.controller;
 
-import hu.webler.webleruserregistrationandlogin.model.UserCreateModel;
+import hu.webler.webleruserregistrationandlogin.model.UserRegistrationModel;
 import hu.webler.webleruserregistrationandlogin.model.UserModel;
 import hu.webler.webleruserregistrationandlogin.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserModel> createNewUser(@RequestBody UserCreateModel userCreateModel) {
-        return ResponseEntity.status(201).body(userService.createUser(userCreateModel));
+    public ResponseEntity<UserModel> createNewUser(@RequestBody UserRegistrationModel userRegistrationModel) {
+        return ResponseEntity.status(201).body(userService.createUser(userRegistrationModel));
     }
 }
